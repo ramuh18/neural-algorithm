@@ -8,16 +8,30 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def log(msg): print(f"[{datetime.now().strftime('%H:%M:%S')}] {msg}")
 
-# [Configuration] 3호기: NEURAL ALGORITHM (다크/왼쪽사이드바)
+# [Configuration] 3호기: NEURAL ALGORITHM
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
 BLOG_TITLE = "NEURAL ALGORITHM"
 BLOG_BASE_URL = "https://ramuh18.github.io/neural-algorithm/" 
 EMPIRE_URL = "https://empire-analyst.digital/"
 HISTORY_FILE = os.path.join(BASE_DIR, "history.json")
 
-# [Monetization] 후킹용 링크
+# [Monetization]
 AFFILIATE_LINK = "https://www.bybit.com/invite?ref=DOVWK5A" 
 AMAZON_LINK = "https://www.amazon.com/s?k=ledger+nano+x&tag=empireanalyst-20"
+
+# [🔥 ENGLISH HOOKING TITLES] 8단어 미만, 유튜브 썸네일 스타일
+HOOKING_TITLES = [
+    "AI Predicts 2026 Market Crash: Warning",
+    "Leaked: Wall Street's Secret AI Algorithm",
+    "Move Your Crypto to Cold Storage NOW",
+    "Exposed: The Banking Collapse Hidden Signs",
+    "1000x Signal: AI Detects Massive Accumulation",
+    "Do Not Ignore This AI Wealth Warning",
+    "Revealed: Central Bank's Digital Kill Switch",
+    "The Great AI Wealth Shift Is Here",
+    "Whistleblower: How Bots Manipulate Bitcoin Price",
+    "Urgent: The End of Manual Trading"
+]
 
 # [Sitemap]
 def generate_sitemap(history):
@@ -33,36 +47,33 @@ def generate_sitemap(history):
     with open(sitemap_path, "w", encoding="utf-8") as f: f.write(xml_content)
     log("📡 Sitemap.xml updated.")
 
-# [FALLBACK] 비상용 1,500자 리포트 (AI 실패시 작동)
+# [FALLBACK] 비상용 원고 (영어, 긴급 톤)
 FALLBACK_REPORT = """
-## SYSTEM ALERT: The 2026 Algorithmic Decoupling Event
+## URGENT: The 2026 Algorithmic Shift
 
-The global financial architecture is undergoing a forced reset. As we enter the second quarter of 2026, the divergence between legacy equity markets and decentralized automated liquidity pools has reached a critical breaking point. We are witnessing the death of manual trading and the rise of the autonomous economy.
+**This is not a drill.** The divergence between legacy markets and automated liquidity pools has reached a breaking point. We are witnessing the death of manual trading.
 
-### 1. The Death of Human Latency
-Institutional capital is now completely dominated by high-frequency execution bots. In this environment, human reaction time is a liability. The 'Alpha' is no longer found in traditional analysis but in execution speed and algorithmic precision. Retail traders attempting to navigate this volatility without automated assistance are mathematically guaranteed to lose capital against sub-millisecond execution systems. The only survival strategy is to align with algorithmic systems that operate on institutional logic, leveraging AI to predict market movements before they appear on the retail charts.
+### 1. Humans Can't Compete
+Institutional capital is now dominated by high-frequency bots. Human reaction time is a liability. The 'Alpha' is in microseconds. Retail traders without automation are guaranteed to lose.
 
-### 2. Digital Sovereignty and Cold Storage Protocol
-With central bank digital currencies (CBDCs) encroaching on financial privacy, the migration of smart money to hardware-secured sovereignty is accelerating. The Ledger ecosystem and non-custodial wallets are becoming the only true safe havens. Our on-chain analysis reveals a massive outflow of Bitcoin and high-cap alts from centralized exchanges into private cold storage. This supply shock will inevitably drive price discovery to unprecedented levels, leaving those without sovereign custody at the mercy of frozen exchanges and regulatory overreach.
+### 2. The Run to Cold Storage
+With CBDCs threatening privacy, smart money is fleeing to hardware wallets. The Ledger ecosystem is the new Swiss Bank. Our data shows massive Bitcoin outflows from exchanges to private vaults.
 
-### 3. The AI-DeFi Singularity: Future Protocol
-We are witnessing the merger of Artificial Intelligence and Decentralized Finance. Smart contracts are evolving into autonomous agents capable of managing complex portfolios with zero human oversight. This shift necessitates a complete re-evaluation of asset allocation. Investors must now prioritize protocols that offer programmable liquidity and AI-driven yield optimization. The static portfolio is dead; the dynamic, AI-managed portfolio is the only vehicle capable of outpacing the coming inflationary wave.
-
-### 4. Strategic Execution: The Path Forward
-To maintain purchasing power in this new era, one must adopt a dual strategy: aggressive automated accumulation via algorithmic bots for income generation, and defensive fortification via cold storage for wealth preservation. This is not merely an investment suggestion; it is a survival protocol for the digital age.
+### 3. Action Required
+To survive, adopt a dual strategy: aggressive AI accumulation and defensive cold storage. **Ignore this at your own risk.**
 """
 
 def generate_part(topic, focus):
-    prompt = f"Write a deep, technical 600-word analysis on '{topic}'. Focus: {focus}. Tone: Cyberpunk, Institutional, Urgent. Use detailed data points. Markdown. English Only."
+    # 프롬프트: 영어 작성 강제 (English Only)
+    prompt = f"Write a shocking, controversial 600-word whistleblower report on '{topic}'. Focus: {focus}. Tone: Urgent, Secretive, 'Don't let them know', Cyberpunk. Reveal hidden truths. Use short, punchy sentences. Markdown. **English Only.**"
     try:
         url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}"
-        resp = requests.post(url, json={"contents": [{"parts": [{"text": prompt}]}], "generationConfig": {"temperature": 0.4}}, timeout=30)
+        resp = requests.post(url, json={"contents": [{"parts": [{"text": prompt}]}], "generationConfig": {"temperature": 0.6}}, timeout=30)
         res = resp.json()['candidates'][0]['content']['parts'][0]['text']
         return re.sub(r'\{"role":.*?"content":', '', res, flags=re.DOTALL).replace('"}', '').strip()
     except: return ""
 
 def create_final_html(topic, img_url, body_html, sidebar_html):
-    # [핵심] 서치콘솔 태그가 삽입된 HTML 헤더
     return f"""<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="Jxh9S9J3S5_RBIpJH4CVrDkpRiDZ_mQ99TfIm7xK7YY" />
@@ -86,12 +97,12 @@ def create_final_html(topic, img_url, body_html, sidebar_html):
         .nav-header {{ color: #fff; font-size: 0.8rem; font-weight:800; letter-spacing: 2px; margin-bottom: 15px; display: block; border-bottom: 1px solid #444; padding-bottom:5px; }}
         
         /* 후킹 버튼 스타일 */
-        .nav-btn {{ display: block; padding: 15px; margin-bottom: 12px; background: #080808; color: #fff; text-decoration: none; font-weight: 800; border: 1px solid var(--accent); transition: 0.3s; font-family: 'JetBrains Mono', monospace; font-size: 0.95rem; text-align: left; }}
+        .nav-btn {{ display: block; padding: 15px; margin-bottom: 12px; background: #080808; color: #fff; text-decoration: none; font-weight: 800; border: 1px solid var(--accent); transition: 0.3s; font-family: 'JetBrains Mono', sans-serif; font-size: 0.95rem; text-align: left; }}
         .nav-btn:hover {{ background: var(--accent); color: #000; box-shadow: 0 0 15px var(--accent); transform: translateX(5px); }}
         .btn-icon {{ float: right; }}
         
         /* 본문 */
-        h1 {{ font-family: 'JetBrains Mono', monospace; font-size: 3rem; color: #fff; margin-bottom: 10px; text-transform: uppercase; letter-spacing: -2px; line-height: 1.1; }}
+        h1 {{ font-family: 'JetBrains Mono', monospace; font-size: 3rem; color: #fff; margin-bottom: 10px; font-weight: 800; line-height: 1.1; letter-spacing: -2px; text-transform: uppercase; }}
         .meta-line {{ color: var(--accent); font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; margin-bottom: 40px; border: 1px dashed var(--accent); display: inline-block; padding: 5px 10px; }}
         
         .content {{ font-size: 1.15rem; text-align: justify; color: #ddd; }}
@@ -122,7 +133,7 @@ def create_final_html(topic, img_url, body_html, sidebar_html):
         
         <main>
             <h1>{topic}</h1>
-            <div class="meta-line">STATUS: DECRYPTED | SOURCE: NEURAL-NET</div>
+            <div class="meta-line">STATUS: LEAKED | SOURCE: CLASSIFIED</div>
             <div style="margin-bottom:40px;">
                 <img src="{img_url}" class="featured-img">
                 <div class="img-caption">
@@ -139,13 +150,16 @@ def create_final_html(topic, img_url, body_html, sidebar_html):
     </footer></body></html>"""
 
 def main():
-    log("⚡ Unit 3 (Neural) Finalizing...")
-    topic = "The Convergence of AI Algorithmic Trading and Crypto Assets"
+    log("⚡ Unit 3 (Neural) English Hook Ver. Started")
     
-    # [핵심] 3개 파트로 1,500자 확보
-    p1 = generate_part(topic, "Algorithmic Efficiency")
-    p2 = generate_part(topic, "Decentralized Sovereignty")
-    p3 = generate_part(topic, "Future Protocol")
+    # [핵심] 8단어 미만 영어 후킹 제목 랜덤 선택
+    topic = random.choice(HOOKING_TITLES)
+    log(f"Selected Title: {topic}")
+    
+    # 3개 파트로 1,500자 확보
+    p1 = generate_part(topic, "The Hidden Danger")
+    p2 = generate_part(topic, "The Secret Mechanism")
+    p3 = generate_part(topic, "The Escape Plan")
     full_content = f"{p1}\n\n{p2}\n\n{p3}"
     
     if len(full_content) < 1000: 
@@ -159,7 +173,7 @@ def main():
     if os.path.exists(HISTORY_FILE):
         with open(HISTORY_FILE, "r", encoding="utf-8") as f: history = json.load(f)
     
-    # 사이드바 로그 링크 스타일
+    # 사이드바 로그 링크
     sidebar_html = "".join([f"<li><a href='{BLOG_BASE_URL}{h.get('file','')}' style='color:#00ff41; font-weight:bold; text-decoration:none; font-family:JetBrains Mono; font-size:0.85rem;'>[{h.get('date','LOG')}] {h.get('title','Log Data')}</a></li>" for h in history[:8]])
     
     archive_name = f"post_{datetime.now().strftime('%Y%m%d_%H%M')}.html"

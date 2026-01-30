@@ -8,18 +8,18 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def log(msg): print(f"[{datetime.now().strftime('%H:%M:%S')}] {msg}")
 
-# [Configuration] 3호기: 다크 네온 테마 & 왼쪽 사이드바
+# [Configuration] 3호기: NEURAL ALGORITHM (다크/왼쪽사이드바)
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
 BLOG_TITLE = "NEURAL ALGORITHM"
 BLOG_BASE_URL = "https://ramuh18.github.io/neural-algorithm/" 
 EMPIRE_URL = "https://empire-analyst.digital/"
 HISTORY_FILE = os.path.join(BASE_DIR, "history.json")
 
-# [Monetization] 후킹 멘트용 링크
+# [Monetization] 후킹용 링크
 AFFILIATE_LINK = "https://www.bybit.com/invite?ref=DOVWK5A" 
 AMAZON_LINK = "https://www.amazon.com/s?k=ledger+nano+x&tag=empireanalyst-20"
 
-# [Sitemap] 2호기와 동일한 강력한 사이트맵 기능
+# [Sitemap]
 def generate_sitemap(history):
     sitemap_path = os.path.join(BASE_DIR, "sitemap.xml")
     today = datetime.now().strftime('%Y-%m-%d')
@@ -33,7 +33,7 @@ def generate_sitemap(history):
     with open(sitemap_path, "w", encoding="utf-8") as f: f.write(xml_content)
     log("📡 Sitemap.xml updated.")
 
-# [FALLBACK] AI 실패 시 나가는 비상용 원고 (1,500자 이상 확보)
+# [FALLBACK] 비상용 1,500자 리포트 (AI 실패시 작동)
 FALLBACK_REPORT = """
 ## SYSTEM ALERT: The 2026 Algorithmic Decoupling Event
 
@@ -53,7 +53,6 @@ To maintain purchasing power in this new era, one must adopt a dual strategy: ag
 """
 
 def generate_part(topic, focus):
-    # 3호기 전용 프롬프트: 사이버펑크 & 데이터 중심
     prompt = f"Write a deep, technical 600-word analysis on '{topic}'. Focus: {focus}. Tone: Cyberpunk, Institutional, Urgent. Use detailed data points. Markdown. English Only."
     try:
         url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}"
@@ -63,9 +62,10 @@ def generate_part(topic, focus):
     except: return ""
 
 def create_final_html(topic, img_url, body_html, sidebar_html):
+    # [핵심] 서치콘솔 태그가 삽입된 HTML 헤더
     return f"""<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="google-site-verification" content="사용자님의_서치콘솔_태그_여기에_넣으세요" />
+    <meta name="google-site-verification" content="Jxh9S9J3S5_RBIpJH4CVrDkpRiDZ_mQ99TfIm7xK7YY" />
     <title>{topic}</title>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;800&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
@@ -73,7 +73,7 @@ def create_final_html(topic, img_url, body_html, sidebar_html):
         :root {{ --bg: #050505; --text: #eeeeee; --accent: #00ff41; --border: #333; }}
         body {{ font-family: 'Rajdhani', sans-serif; line-height: 1.6; color: var(--text); background: var(--bg); margin: 0; }}
         
-        /* [LAYOUT] 2호기와 반대: 사이드바 왼쪽 (300px) + 본문 오른쪽 */
+        /* [LAYOUT] 사이드바 왼쪽 (300px) */
         .container {{ max-width: 1600px; margin: 0 auto; display: grid; grid-template-columns: 300px 1fr; gap: 50px; padding: 40px 20px; }}
         @media(max-width: 1000px) {{ .container {{ grid-template-columns: 1fr; }} }}
         
@@ -81,23 +81,23 @@ def create_final_html(topic, img_url, body_html, sidebar_html):
         header {{ border-bottom: 2px solid var(--accent); background: #000; padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }}
         .brand {{ font-family: 'JetBrains Mono', monospace; font-weight: 800; font-size: 1.5rem; color: var(--accent); text-shadow: 0 0 5px var(--accent); }}
         
-        /* 사이드바 (왼쪽 배치) */
+        /* 사이드바 */
         .sidebar {{ position: sticky; top: 120px; height: fit-content; border-right: 1px solid #333; padding-right: 30px; }}
         .nav-header {{ color: #fff; font-size: 0.8rem; font-weight:800; letter-spacing: 2px; margin-bottom: 15px; display: block; border-bottom: 1px solid #444; padding-bottom:5px; }}
         
-        /* 버튼 디자인: 후킹 멘트 강조 */
+        /* 후킹 버튼 스타일 */
         .nav-btn {{ display: block; padding: 15px; margin-bottom: 12px; background: #080808; color: #fff; text-decoration: none; font-weight: 800; border: 1px solid var(--accent); transition: 0.3s; font-family: 'JetBrains Mono', monospace; font-size: 0.95rem; text-align: left; }}
         .nav-btn:hover {{ background: var(--accent); color: #000; box-shadow: 0 0 15px var(--accent); transform: translateX(5px); }}
         .btn-icon {{ float: right; }}
         
-        /* 본문 영역 */
+        /* 본문 */
         h1 {{ font-family: 'JetBrains Mono', monospace; font-size: 3rem; color: #fff; margin-bottom: 10px; text-transform: uppercase; letter-spacing: -2px; line-height: 1.1; }}
         .meta-line {{ color: var(--accent); font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; margin-bottom: 40px; border: 1px dashed var(--accent); display: inline-block; padding: 5px 10px; }}
         
         .content {{ font-size: 1.15rem; text-align: justify; color: #ddd; }}
         .content h2 {{ color: #fff; border-left: 4px solid var(--accent); padding-left: 15px; margin-top: 50px; font-family: 'JetBrains Mono', monospace; font-size: 1.6rem; }}
         
-        /* 이미지 스타일 */
+        /* 이미지 */
         .featured-img {{ width: 100%; height: 450px; object-fit: cover; border: 1px solid #333; filter: brightness(0.9) contrast(1.1); }}
         .img-caption {{ background: #111; color: #aaa; padding: 15px; text-align: center; font-family: 'JetBrains Mono', monospace; border: 1px solid #333; font-size: 0.8rem; }}
         .img-caption a {{ color: var(--accent); font-weight: bold; text-decoration: none; border-bottom: 1px solid var(--accent); }}
@@ -112,7 +112,6 @@ def create_final_html(topic, img_url, body_html, sidebar_html):
     <div class="container">
         <aside class="sidebar">
             <span class="nav-header">// SECRET TOOLS</span>
-            
             <a href="{EMPIRE_URL}" class="nav-btn">🔓 ACCESS HQ INTEL <span class="btn-icon">>></span></a>
             <a href="{AFFILIATE_LINK}" class="nav-btn">🚀 START AI TRADING <span class="btn-icon">>></span></a>
             <a href="{AMAZON_LINK}" class="nav-btn">🛡️ GET COLD WALLET <span class="btn-icon">>></span></a>
@@ -124,7 +123,6 @@ def create_final_html(topic, img_url, body_html, sidebar_html):
         <main>
             <h1>{topic}</h1>
             <div class="meta-line">STATUS: DECRYPTED | SOURCE: NEURAL-NET</div>
-            
             <div style="margin-bottom:40px;">
                 <img src="{img_url}" class="featured-img">
                 <div class="img-caption">
@@ -132,7 +130,6 @@ def create_final_html(topic, img_url, body_html, sidebar_html):
                     <a href="{EMPIRE_URL}">Download the 2026 Strategy File at Empire Analyst HQ</a>
                 </div>
             </div>
-            
             <div class="content">{body_html}</div>
         </main>
     </div>
@@ -142,18 +139,17 @@ def create_final_html(topic, img_url, body_html, sidebar_html):
     </footer></body></html>"""
 
 def main():
-    log("⚡ Unit 3 (Neural) Final Robust Ver. Started")
+    log("⚡ Unit 3 (Neural) Finalizing...")
     topic = "The Convergence of AI Algorithmic Trading and Crypto Assets"
     
-    # [핵심] 3개 파트로 나누어 1,500자 분량 강제 확보
+    # [핵심] 3개 파트로 1,500자 확보
     p1 = generate_part(topic, "Algorithmic Efficiency")
     p2 = generate_part(topic, "Decentralized Sovereignty")
     p3 = generate_part(topic, "Future Protocol")
     full_content = f"{p1}\n\n{p2}\n\n{p3}"
     
-    # [안전장치] AI가 쓴 글이 1000자 미만이면 백업 리포트(FALLBACK_REPORT) 사용
     if len(full_content) < 1000: 
-        log("⚠️ AI content too short. Engaging Fallback Protocol.")
+        log("⚠️ AI content short. Engaging Fallback.")
         full_content = FALLBACK_REPORT
     
     html_body = markdown.markdown(full_content)
@@ -163,7 +159,7 @@ def main():
     if os.path.exists(HISTORY_FILE):
         with open(HISTORY_FILE, "r", encoding="utf-8") as f: history = json.load(f)
     
-    # 사이드바 로그 링크 스타일링
+    # 사이드바 로그 링크 스타일
     sidebar_html = "".join([f"<li><a href='{BLOG_BASE_URL}{h.get('file','')}' style='color:#00ff41; font-weight:bold; text-decoration:none; font-family:JetBrains Mono; font-size:0.85rem;'>[{h.get('date','LOG')}] {h.get('title','Log Data')}</a></li>" for h in history[:8]])
     
     archive_name = f"post_{datetime.now().strftime('%Y%m%d_%H%M')}.html"
